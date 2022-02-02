@@ -1,0 +1,17 @@
+{
+  "name": "nextjs-strapi-blog-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "develop:backend": "npm run develop --prefix cms",
+    "develop:frontend": "npm run dev --prefix client",
+    "develop": "concurrently \"npm run develop:backend\" \"npm run develop:frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
