@@ -40,6 +40,7 @@ const ALL_POST_QUERY = gql`
     }
     categories {
       data {
+        id
         attributes {
           name
           slug
@@ -74,6 +75,18 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
       </Head>
 
       <h1>Next.js/Strapi Blog Starter</h1>
+
+      <div className="p-4 bg-amber-300 flex gap-4">
+        <Link href="/authors">
+          <a>Authors</a>
+        </Link>
+        <Link href="/categories">
+          <a>Categories</a>
+        </Link>
+        <Link href="/posts">
+          <a>Posts</a>
+        </Link>
+      </div>
 
       <div>
         {categories.map(({ id, attributes: { name } }) => (
