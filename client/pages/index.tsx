@@ -1,7 +1,9 @@
 import { ApolloError, gql } from "@apollo/client";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { apolloClient } from "../lib/apollo";
+import { CategoryType, PostType } from "../lib/typings";
 
 const ALL_POST_QUERY = gql`
   {
@@ -11,6 +13,7 @@ const ALL_POST_QUERY = gql`
         attributes {
           title
           publishedAt
+          slug
           author {
             data {
               attributes {
@@ -39,6 +42,7 @@ const ALL_POST_QUERY = gql`
       data {
         attributes {
           name
+          slug
           cover {
             data {
               attributes {
@@ -53,8 +57,8 @@ const ALL_POST_QUERY = gql`
 `;
 
 interface Props {
-  posts: any[];
-  categories: any[];
+  posts: PostType[];
+  categories: CategoryType[];
   error: ApolloError;
 }
 
@@ -71,13 +75,21 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
 
       <h1>Next.js/Strapi Blog Starter</h1>
 
-      <div>{JSON.stringify(categories)}</div>
-
       <div>
-        {posts.map(({ id, attributes }) => (
-          <div key={id}>{attributes.title}</div>
+        {categories.map(({ id, attributes: { name } }) => (
+          <div key={id}>{name}</div>
         ))}
       </div>
+
+      <div>
+        {posts.map(({ id, attributes: { title } }) => (
+          <div key={id}>{title}</div>
+        ))}
+      </div>
+
+      <Link href={`/posts/${posts[0].attributes.slug}`}>
+        <a>CLICK: {posts[0].attributes.title}</a>
+      </Link>
     </div>
   );
 };
