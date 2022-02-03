@@ -6,6 +6,7 @@ export interface PostType {
     publishedAt: string;
     slug: string;
     author: { data: AuthorType };
+    category: { data: CategoryType };
     cover: { data: ImageType };
   };
 }
@@ -16,6 +17,7 @@ export interface CategoryType {
     name: string;
     description: string;
     slug: string;
+    posts: { data: PostType[] };
     cover: { data: ImageType };
   };
 }
@@ -32,5 +34,8 @@ export interface AuthorType {
 export interface ImageType {
   attributes: {
     url: string;
+    width: number;
+    height: number;
+    alternativeText: string;
   };
 }

@@ -5,7 +5,9 @@ import {
   GetStaticPropsContext,
   NextPage,
 } from "next";
-import { apolloClient } from "../../lib/apollo";
+import Image from "next/image";
+import Link from "next/link";
+import { API_URL, apolloClient } from "../../lib/apollo";
 import { PostType } from "../../lib/typings";
 
 const GET_ALL_POST_SLUGS = gql`
@@ -28,6 +30,25 @@ const GET_POST = gql`
           slug
           title
           content
+          publishedAt
+          cover {
+            data {
+              attributes {
+                url
+                width
+                height
+                alternativeText
+              }
+            }
+          }
+          category {
+            data {
+              attributes {
+                name
+                slug
+              }
+            }
+          }
         }
       }
     }
@@ -39,10 +60,22 @@ interface Props {
 }
 
 const Post: NextPage<Props> = ({ post }) => {
-  const { title, content } = post.attributes;
+  const { title, content, publishedAt, cover, category } = post.attributes;
+  const { url, width, height, alternativeText } = cover.data.attributes;
 
   return (
     <div>
+      <Image
+        src={`${API_URL}${url}`}
+        width={width}
+        height={height}
+        alt={alternativeText}
+      />
+      <Link href={`/categories/${category.data.attributes.slug}`}>
+        <a>{category.data.attributes.name}</a>
+      </Link>
+      <span>{new Date(publishedAt).toDateString()}</span>
+      <span>{Math.ceil(content.split(" ").length / 300)} min read</span>
       <h1>{title}</h1>
       <pre>{content}</pre>
     </div>
@@ -55,7 +88,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts: Pick<PostType, "attributes">[] = data.posts.data;
   const paths = posts.map(({ attributes: { slug } }) => ({ params: { slug } }));
 
-  console.log(paths);
   return {
     paths,
     fallback: false,
@@ -75,7 +107,7 @@ export const getStaticProps: GetStaticProps = async (
 
   return {
     props: { post },
-    revalidate: 30,
+    revalidate: 60,
   };
 };
 
