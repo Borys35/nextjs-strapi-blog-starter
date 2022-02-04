@@ -71,6 +71,7 @@ const Category: NextPage<Props> = ({ category }) => {
         width={width}
         height={height}
         alt={alternativeText}
+        priority
       />
       <h1>{name}</h1>
       <pre>{description}</pre>

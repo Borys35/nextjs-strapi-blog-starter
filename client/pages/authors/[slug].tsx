@@ -80,6 +80,7 @@ const author: NextPage<Props> = ({ author }) => {
         width={width}
         height={height}
         alt={alternativeText}
+        priority
       />
       <h1>NAME: {name}</h1>
       <div>

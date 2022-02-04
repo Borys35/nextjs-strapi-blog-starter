@@ -70,6 +70,7 @@ const Post: NextPage<Props> = ({ post }) => {
         width={width}
         height={height}
         alt={alternativeText}
+        priority
       />
       <Link href={`/categories/${category.data.attributes.slug}`}>
         <a>{category.data.attributes.name}</a>
