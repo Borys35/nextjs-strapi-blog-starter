@@ -10,7 +10,7 @@ const Logo: FC<Props> = ({ className }) => {
   return (
     <Link href="/">
       <a className={className}>
-        <Heading level={4}>On Sight</Heading>
+        <Heading level={4}>Blog Starter</Heading>
       </a>
     </Link>
   );

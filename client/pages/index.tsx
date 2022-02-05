@@ -67,7 +67,7 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
   if (error) return <div>{error.message}</div>;
 
   return (
-    <Layout>
+    <Layout title="Home" description="Welcome to the Blog">
       <h1>Next.js/Strapi Blog Starter</h1>
 
       <div className="p-4 bg-amber-300 flex gap-4">
