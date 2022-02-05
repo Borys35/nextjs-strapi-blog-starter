@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_global_links",
+  "info": {
+    "displayName": "Links",
+    "icon": "at",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "isButton": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}

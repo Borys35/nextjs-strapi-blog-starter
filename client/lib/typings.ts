@@ -40,3 +40,21 @@ export interface ImageType {
     alternativeText: string;
   };
 }
+
+export interface GlobalType {
+  attributes: {
+    siteUrl: string;
+    siteName: string;
+    siteIcon: { data: ImageType };
+    middleNavLinks: LinkType[];
+    rightNavLinks: LinkType[];
+    footerLinks: LinkType[];
+  };
+}
+
+interface LinkType {
+  id: string;
+  text: string;
+  url: string;
+  isButton: boolean;
+}
