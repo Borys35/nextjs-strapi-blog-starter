@@ -41,7 +41,7 @@ const Nav: FC = () => {
         </div>
       </Container>
       {open && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-blue-500 py-4">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-blue-500 py-4 z-10">
           <Container>
             <div className="flex flex-col gap-4 col-start-1 col-end-13">
               {[...middleNavLinks, ...rightNavLinks].map(

@@ -4,6 +4,7 @@ import { FC } from "react";
 interface Props {
   size?: "sm" | "md" | "lg";
   color?: "light" | "dark" | "black";
+  className?: string;
 }
 
 const sizes = {
@@ -13,17 +14,24 @@ const sizes = {
 };
 
 const colors = {
-  light: "text-gray-600",
-  dark: "text-gray-900",
+  light: "text-gray-700",
+  dark: "text-gray-800",
   black: "text-black",
 };
 
-const Paragraph: FC<Props> = ({ children, size = "md", color = "dark" }) => {
+const Paragraph: FC<Props> = ({
+  children,
+  size = "md",
+  color = "dark",
+  className,
+}) => {
   const sizeClass = sizes[size];
   const colorClass = colors[color];
 
   return (
-    <p className={classNames("leading-normal", sizeClass, colorClass)}>
+    <p
+      className={classNames("leading-normal", sizeClass, colorClass, className)}
+    >
       {children}
     </p>
   );
