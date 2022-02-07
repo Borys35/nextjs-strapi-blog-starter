@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { useGlobal } from "../providers/GlobalProvider";
-import Button from "./atoms/button";
 import Container from "./atoms/container";
 import Logo from "./logo";
 import NavLink from "./nav-link";
@@ -22,9 +21,6 @@ const Nav: FC = () => {
                 {text}
               </NavLink>
             ))}
-            <NavLink to="/categories/tutorials">Tutorials</NavLink>
-            <NavLink to="/categories/news">News</NavLink>
-            <NavLink to="/categories/devlogs">Devlogs</NavLink>
           </div>
           <div className="hidden md:flex md:gap-4 md:items-center">
             {rightNavLinks.map(({ id, text, url, isButton }) => (
@@ -32,8 +28,6 @@ const Nav: FC = () => {
                 {text}
               </NavLink>
             ))}
-            <NavLink to="/donate">Donate</NavLink>
-            <Button>Contact</Button>
           </div>
           <div className="md:hidden" onClick={() => setOpen(!open)}>
             {!open ? "Open" : "Close"}
@@ -51,11 +45,6 @@ const Nav: FC = () => {
                   </NavLink>
                 )
               )}
-              <NavLink to="/categories/tutorials">Tutorials</NavLink>
-              <NavLink to="/categories/news">News</NavLink>
-              <NavLink to="/categories/devlogs">Devlogs</NavLink>
-              <NavLink to="/donate">Donate</NavLink>
-              <Button>Contact</Button>
             </div>
           </Container>
         </div>

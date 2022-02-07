@@ -1,5 +1,6 @@
 import { ApolloError, gql } from "@apollo/client";
 import type { GetStaticProps, NextPage } from "next";
+import Image from "next/image";
 import Button from "../components/atoms/button";
 import Container from "../components/atoms/container";
 import Heading from "../components/atoms/heading";
@@ -8,12 +9,68 @@ import BlogPost from "../components/blog-post";
 import CategoryCard from "../components/category-card";
 import Field from "../components/field";
 import Layout from "../components/layout";
-import { apolloClient } from "../lib/apollo";
-import { CategoryType, PostType } from "../lib/typings";
+import { API_URL, apolloClient } from "../lib/apollo";
+import { CategoryType, HomeType, PostType } from "../lib/typings";
 
-const ALL_POST_QUERY = gql`
+const GET_HOME_ATTRIBUTES = gql`
   {
-    posts {
+    home {
+      data {
+        attributes {
+          heading
+          subheading
+          newsletterHeading
+          newsletterSubheading
+          mainImage {
+            data {
+              attributes {
+                url
+                width
+                height
+                alternativeText
+              }
+            }
+          }
+          featuredPosts(pagination: { pageSize: 5 }) {
+            data {
+              id
+              attributes {
+                title
+                slug
+                publishedAt
+                cover {
+                  data {
+                    attributes {
+                      url
+                      width
+                      height
+                      alternativeText
+                    }
+                  }
+                }
+                category {
+                  data {
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
+                author {
+                  data {
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    posts(pagination: { pageSize: 8 }, sort: "publishedAt:desc") {
       data {
         id
         attributes {
@@ -57,6 +114,9 @@ const ALL_POST_QUERY = gql`
             data {
               attributes {
                 url
+                width
+                height
+                alternativeText
               }
             }
           }
@@ -67,13 +127,24 @@ const ALL_POST_QUERY = gql`
 `;
 
 interface Props {
+  home: HomeType;
   posts: PostType[];
   categories: CategoryType[];
   error: ApolloError;
 }
 
-const Home: NextPage<Props> = ({ posts, categories, error }) => {
+const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
   if (error) return <div>{error.message}</div>;
+
+  const {
+    heading,
+    subheading,
+    newsletterHeading,
+    newsletterSubheading,
+    mainImage,
+    featuredPosts,
+  } = home.attributes;
+  const { url, width, height, alternativeText } = mainImage.data.attributes;
 
   return (
     <Layout title="Home" description="Welcome to the Blog">
@@ -84,17 +155,25 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
               level={1}
               className="col-start-1 col-end-13 md:col-start-2 md:col-end-6"
             >
-              Blog Starter
+              {heading}
             </Heading>
-            <div className="col-start-1 col-end-3 md:col-start-2 md:col-end-4">
-              Socials
+            <div className="col-start-1 col-end-3 md:col-start-2 md:col-end-3">
+              tw
+              <br />
+              ig
+              <br />
+              fb
             </div>
-            <div className="col-start-3 col-end-13 md:col-start-4 md:col-end-8">
-              <Paragraph>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus
-                eum ratione doloribus eos mollitia rem harum cupiditate corporis
-                expedita tempora.
-              </Paragraph>
+            <div className="col-start-3 col-end-13 md:col-start-3 md:col-end-6">
+              <Paragraph>{subheading}</Paragraph>
+            </div>
+            <div className="hidden md:col-start-7 md:col-end-12 md:row-start-1 md:row-end-3 md:grid md:place-items-center">
+              <Image
+                src={`${API_URL}${url}`}
+                width={width}
+                height={height}
+                alt={alternativeText}
+              />
             </div>
           </Container>
         </header>
@@ -105,23 +184,23 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
             </Heading>
             <div className="grid gap-8 md:grid-cols-3 md:grid-rows-6 col-start-1 col-end-13">
               <BlogPost
-                post={posts[0]}
+                post={featuredPosts.data[0]}
                 className="md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-4"
               />
               <BlogPost
-                post={posts[1]}
+                post={featuredPosts.data[1]}
                 className="md:col-start-3 md:col-end-4 md:row-start-1 md:row-end-3"
               />
               <BlogPost
-                post={posts[2]}
+                post={featuredPosts.data[2]}
                 className="md:col-start-3 md:col-end-4 md:row-start-3 md:row-end-5"
               />
               <BlogPost
-                post={posts[0]}
+                post={featuredPosts.data[3]}
                 className="md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-7"
               />
               <BlogPost
-                post={posts[1]}
+                post={featuredPosts.data[4]}
                 className="md:col-start-3 md:col-end-4 md:row-start-5 md:row-end-7"
               />
             </div>
@@ -134,17 +213,13 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
               Latest
             </Heading>
             <div className="grid gap-8 md:grid-cols-2 col-start-1 col-end-13">
-              <BlogPost post={posts[0]} />
-              <BlogPost post={posts[1]} />
-              <BlogPost post={posts[2]} />
-              <BlogPost post={posts[0]} />
-              <BlogPost post={posts[2]} />
-              <BlogPost post={posts[0]} />
+              {posts.map((post) => (
+                <BlogPost post={post} />
+              ))}
               <div className="grid md:grid-cols-3 gap-8 md:col-start-1 md:col-end-3 row-start-3 row-end-4 py-16">
-                <CategoryCard category={categories[0]} />
-                <CategoryCard category={categories[1]} />
-                <CategoryCard category={categories[2]} />
-                <CategoryCard category={categories[3]} />
+                {categories.map((category) => (
+                  <CategoryCard category={category} />
+                ))}
               </div>
             </div>
           </Container>
@@ -153,10 +228,9 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
         <section>
           <Container>
             <div className="col-start-1 col-end-13">
-              <Heading level={1}>Interested in blog?</Heading>
+              <Heading level={1}>{newsletterHeading}</Heading>
               <Paragraph size="lg" className="mb-8">
-                Subsribe to my newsletter and get all blog posts as fast as you
-                can!
+                {newsletterSubheading}
               </Paragraph>
               <form
                 onSubmit={(e) => e.preventDefault()}
@@ -179,7 +253,9 @@ const Home: NextPage<Props> = ({ posts, categories, error }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data, error } = await apolloClient.query({ query: ALL_POST_QUERY });
+  const { data, error } = await apolloClient.query({
+    query: GET_HOME_ATTRIBUTES,
+  });
 
   if (error)
     return {
@@ -187,7 +263,11 @@ export const getStaticProps: GetStaticProps = async () => {
     };
 
   return {
-    props: { posts: data.posts.data, categories: data.categories.data },
+    props: {
+      home: data.home.data,
+      posts: data.posts.data,
+      categories: data.categories.data,
+    },
     revalidate: 30,
   };
 };

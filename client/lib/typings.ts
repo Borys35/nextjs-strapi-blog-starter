@@ -41,6 +41,13 @@ export interface ImageType {
   };
 }
 
+interface LinkType {
+  id: string;
+  text: string;
+  url: string;
+  isButton: boolean;
+}
+
 export interface GlobalType {
   attributes: {
     siteUrl: string;
@@ -52,9 +59,13 @@ export interface GlobalType {
   };
 }
 
-interface LinkType {
-  id: string;
-  text: string;
-  url: string;
-  isButton: boolean;
+export interface HomeType {
+  attributes: {
+    heading: string;
+    subheading: string;
+    newsletterHeading: string;
+    newsletterSubheading: string;
+    mainImage: { data: ImageType };
+    featuredPosts: { data: PostType[] };
+  };
 }
