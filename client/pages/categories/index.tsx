@@ -1,6 +1,9 @@
 import { gql } from "@apollo/client";
 import { GetStaticProps, NextPage } from "next";
-import Link from "next/link";
+import Container from "../../components/atoms/container";
+import Heading from "../../components/atoms/heading";
+import CategoryCard from "../../components/category-card";
+import Layout from "../../components/layout";
 import { apolloClient } from "../../lib/apollo";
 import { CategoryType } from "../../lib/typings";
 
@@ -24,13 +27,23 @@ interface Props {
 
 const Categories: NextPage<Props> = ({ categories }) => {
   return (
-    <div className="flex flex-col gap-6">
-      {categories.map(({ id, attributes: { name, slug } }) => (
-        <Link key={id} href={`/categories/${slug}`}>
-          <a>{name}</a>
-        </Link>
-      ))}
-    </div>
+    <Layout
+      title="Categories"
+      description="Check out all topics we write about"
+    >
+      <div className="my-24">
+        <Container>
+          <Heading level={1} className="mb-4">
+            Categories
+          </Heading>
+          <section className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-start-1 col-end-13">
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
+          </section>
+        </Container>
+      </div>
+    </Layout>
   );
 };
 

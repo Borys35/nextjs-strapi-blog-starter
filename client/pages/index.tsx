@@ -214,11 +214,11 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
             </Heading>
             <div className="grid gap-8 md:grid-cols-2 col-start-1 col-end-13">
               {posts.map((post) => (
-                <BlogPost post={post} />
+                <BlogPost key={post.id} post={post} />
               ))}
               <div className="grid md:grid-cols-3 gap-8 md:col-start-1 md:col-end-3 row-start-3 row-end-4 py-16">
                 {categories.map((category) => (
-                  <CategoryCard category={category} />
+                  <CategoryCard key={category.id} category={category} />
                 ))}
               </div>
             </div>
