@@ -1,6 +1,9 @@
 import { gql } from "@apollo/client";
 import { GetStaticProps, NextPage } from "next";
-import Link from "next/link";
+import Container from "../../components/atoms/container";
+import Heading from "../../components/atoms/heading";
+import BlogPost from "../../components/blog-post";
+import Layout from "../../components/layout";
 import { apolloClient } from "../../lib/apollo";
 import { PostType } from "../../lib/typings";
 
@@ -12,6 +15,16 @@ const GET_ALL_POSTS = gql`
         attributes {
           slug
           title
+          cover {
+            data {
+              attributes {
+                url
+                width
+                height
+                alternativeText
+              }
+            }
+          }
         }
       }
     }
@@ -24,13 +37,23 @@ interface Props {
 
 const Posts: NextPage<Props> = ({ posts }) => {
   return (
-    <div className="flex flex-col gap-6">
-      {posts.map(({ id, attributes: { title, slug } }) => (
-        <Link key={id} href={`/posts/${slug}`}>
-          <a>{title}</a>
-        </Link>
-      ))}
-    </div>
+    <Layout
+      title="Posts"
+      description="There are all posts we have ever published to you!"
+    >
+      <div className="my-24">
+        <Container>
+          <Heading level={1} className="mb-4">
+            Posts
+          </Heading>
+          <section className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-start-1 col-end-13">
+            {posts.map((post) => (
+              <BlogPost key={post.id} post={post} />
+            ))}
+          </section>
+        </Container>
+      </div>
+    </Layout>
   );
 };
 
