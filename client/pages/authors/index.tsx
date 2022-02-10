@@ -57,10 +57,7 @@ interface Props {
 
 const Authors: NextPage<Props> = ({ authors }) => {
   return (
-    <Layout
-      title="Posts"
-      description="There are all posts we have ever published to you!"
-    >
+    <Layout title="Authors" description="Meet our writers!">
       <div className="my-24">
         <Container>
           <Heading level={1} className="mb-4">

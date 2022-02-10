@@ -14,6 +14,7 @@ const GET_ALL_POST_SLUGS = gql`
   {
     posts {
       data {
+        id
         attributes {
           slug
         }

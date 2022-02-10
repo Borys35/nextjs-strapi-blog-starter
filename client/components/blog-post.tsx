@@ -24,7 +24,7 @@ const BlogPost: FC<Props> = ({ className, post }) => {
   return (
     <Link href={`/posts/${slug}`}>
       <a className={classNames("p-4 bg-yellow-300", className)}>
-        <div>
+        <div className="flex flex-col gap-4">
           <Image
             src={`${API_URL}${url}`}
             width={1200}

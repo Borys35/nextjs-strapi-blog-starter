@@ -46,7 +46,7 @@ const Posts: NextPage<Props> = ({ posts }) => {
           <Heading level={1} className="mb-4">
             Posts
           </Heading>
-          <section className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-start-1 col-end-13">
+          <section className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-start-1 col-end-13">
             {posts.map((post) => (
               <BlogPost key={post.id} post={post} />
             ))}

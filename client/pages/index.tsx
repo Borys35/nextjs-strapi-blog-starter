@@ -182,26 +182,26 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
             <Heading level={2} className="col-start-1 col-end-13 mb-8">
               My Pick
             </Heading>
-            <div className="grid gap-8 md:grid-cols-3 md:grid-rows-6 col-start-1 col-end-13">
+            <div className="grid gap-8 lg:grid-cols-3 lg:grid-rows-6 col-start-1 col-end-13">
               <BlogPost
                 post={featuredPosts.data[0]}
-                className="md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-4"
+                className="lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-4"
               />
               <BlogPost
                 post={featuredPosts.data[1]}
-                className="md:col-start-3 md:col-end-4 md:row-start-1 md:row-end-3"
+                className="lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3"
               />
               <BlogPost
                 post={featuredPosts.data[2]}
-                className="md:col-start-3 md:col-end-4 md:row-start-3 md:row-end-5"
+                className="lg:col-start-3 lg:col-end-4 lg:row-start-3 lg:row-end-5"
               />
               <BlogPost
                 post={featuredPosts.data[3]}
-                className="md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-7"
+                className="lg:col-start-1 lg:col-end-3 lg:row-start-4 lg:row-end-7"
               />
               <BlogPost
                 post={featuredPosts.data[4]}
-                className="md:col-start-3 md:col-end-4 md:row-start-5 md:row-end-7"
+                className="lg:col-start-3 lg:col-end-4 lg:row-start-5 lg:row-end-7"
               />
             </div>
           </Container>
