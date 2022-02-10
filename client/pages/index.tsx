@@ -240,7 +240,7 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
                   label="Your e-mail"
                   inputProps={{ placeholder: "example@mail.com" }}
                 />
-                <Button size="lg" variant="primary" className="-ml-2">
+                <Button size="lg" variant="primary">
                   Subscribe
                 </Button>
               </form>

@@ -27,6 +27,7 @@ export interface AuthorType {
   attributes: {
     name: string;
     slug: string;
+    description: string;
     avatar: { data: ImageType };
     posts: { data: PostType[] };
   };
