@@ -153,7 +153,7 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
           <Container>
             <Heading
               level={1}
-              className="col-start-1 col-end-13 md:col-start-2 md:col-end-6"
+              className="mb-4 col-start-1 col-end-13 md:col-start-2 md:col-end-6"
             >
               {heading}
             </Heading>

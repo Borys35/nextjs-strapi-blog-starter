@@ -7,6 +7,13 @@ import {
 } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { remark } from "remark";
+import remarkHtml from "remark-html";
+import sanitize from "sanitize-html";
+import Container from "../../components/atoms/container";
+import Heading from "../../components/atoms/heading";
+import Paragraph from "../../components/atoms/paragraph";
+import Layout from "../../components/layout";
 import { API_URL, apolloClient } from "../../lib/apollo";
 import { PostType } from "../../lib/typings";
 
@@ -65,22 +72,44 @@ const Post: NextPage<Props> = ({ post }) => {
   const { url, width, height, alternativeText } = cover.data.attributes;
 
   return (
-    <div>
-      <Image
-        src={`${API_URL}${url}`}
-        width={width}
-        height={height}
-        alt={alternativeText}
-        priority
-      />
-      <Link href={`/categories/${category.data.attributes.slug}`}>
-        <a>{category.data.attributes.name}</a>
-      </Link>
-      <span>{new Date(publishedAt).toDateString()}</span>
-      <span>{Math.ceil(content.split(" ").length / 300)} min read</span>
-      <h1>{title}</h1>
-      <pre>{content}</pre>
-    </div>
+    <Layout
+      title={title}
+      description={`It's blog post called \"${title}\" - Enjoy reading!`}
+    >
+      <div className="h-screen lg:h-128 overflow-hidden relative">
+        <Image
+          src={`${API_URL}${url}`}
+          alt={alternativeText}
+          layout="fill"
+          objectFit="cover"
+          priority
+        />
+        <div className="bg-gradient-to-r from-white via-white to-transparent absolute w-full h-full top-0 grid place-content-center">
+          <Container>
+            <div className="py-12 col-start-1 col-end-8 md:col-start-2">
+              <div className="flex flex-wrap gap-x-8 mb-4">
+                <Link href={`/categories/${category.data.attributes.slug}`}>
+                  <a>{category.data.attributes.name}</a>
+                </Link>
+                <span>{new Date(publishedAt).toDateString()}</span>
+                <span>
+                  {Math.ceil(content.split(" ").length / 300)} min read
+                </span>
+              </div>
+              <Heading level={1}>{title}</Heading>
+            </div>
+          </Container>
+        </div>
+      </div>
+      <Container>
+        <Paragraph
+          className="leading-loose col-start-1 col-end-13 my-12 md:col-start-3 md:col-end-10"
+          size="lg"
+        >
+          <span dangerouslySetInnerHTML={{ __html: content }}></span>
+        </Paragraph>
+      </Container>
+    </Layout>
   );
 };
 
@@ -106,9 +135,17 @@ export const getStaticProps: GetStaticProps = async (
   });
 
   const [post] = data.posts.data as PostType[];
+  const processed = await remark()
+    .use(remarkHtml)
+    .process(post.attributes.content);
+  const newPost = { ...post };
+  newPost.attributes = {
+    ...newPost.attributes,
+    content: sanitize(processed.toString()),
+  };
 
   return {
-    props: { post },
+    props: { post: newPost },
     revalidate: 60,
   };
 };
