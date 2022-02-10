@@ -36,7 +36,7 @@ const AuthorCard: FC<Props> = ({ author }) => {
         <div className="flex flex-col gap-4">
           <Heading level={4}>{name}</Heading>
           <Paragraph size="sm" className="uppercase">
-            {posts.data.length} posts
+            {posts.data.length} post{posts.data.length !== 1 && "s"}
           </Paragraph>
         </div>
       </a>
