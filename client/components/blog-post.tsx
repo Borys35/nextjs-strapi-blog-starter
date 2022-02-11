@@ -32,7 +32,7 @@ const BlogPost: FC<Props> = ({ className, post }) => {
             objectFit="cover"
             alt={alternativeText}
           />
-          <Heading level={3}>{title}</Heading>
+          <Heading level={4}>{title}</Heading>
         </div>
       </a>
     </Link>

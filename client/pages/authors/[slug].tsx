@@ -6,7 +6,11 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Container from "../../components/atoms/container";
+import Heading from "../../components/atoms/heading";
+import Paragraph from "../../components/atoms/paragraph";
+import BlogPost from "../../components/blog-post";
+import Layout from "../../components/layout";
 import { API_URL, apolloClient } from "../../lib/apollo";
 import { AuthorType } from "../../lib/typings";
 
@@ -29,6 +33,7 @@ const GET_AUTHOR = gql`
         attributes {
           name
           slug
+          description
           posts {
             data {
               attributes {
@@ -69,28 +74,52 @@ interface Props {
 
 const author: NextPage<Props> = ({ author }) => {
   const {
-    attributes: { name, slug, avatar, posts },
+    attributes: { name, description, slug, avatar, posts },
   } = author;
   const { url, width, height, alternativeText } = avatar.data.attributes;
+  console.log(description, "desc");
 
   return (
-    <div>
-      <Image
-        src={`${API_URL}${url}`}
-        width={width}
-        height={height}
-        alt={alternativeText}
-        priority
-      />
-      <h1>NAME: {name}</h1>
-      <div>
-        {posts.data.map(({ id, attributes: { title, slug } }) => (
-          <Link key={id} href={`/posts/${slug}`}>
-            <a>{title}</a>
-          </Link>
-        ))}
+    <Layout title={name} description={description}>
+      <div className="flex flex-col gap-16 my-16">
+        <Container>
+          <header className="w-full flex flex-col sm:flex-row gap-8 sm:items-start col-start-1 col-end-13">
+            <div
+              className="aspect-square relative"
+              style={{ minWidth: "192px" }}
+            >
+              <Image
+                src={`${API_URL}${url}`}
+                width={192}
+                height={192}
+                alt={alternativeText}
+                objectFit="cover"
+                layout="fill"
+                priority
+              />
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <Heading level={2}>{name}</Heading>
+              <Paragraph>{description}</Paragraph>
+            </div>
+          </header>
+        </Container>
+
+        <section>
+          <Container>
+            <Heading level={2} className="mb-4 col-start-1 col-end-13">
+              {posts.data.length} post{posts.data.length !== 1 && "s"}
+            </Heading>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 col-start-1 col-end-13">
+              {posts.data.map((post) => (
+                <BlogPost key={post.id} post={post} />
+              ))}
+            </div>
+          </Container>
+        </section>
       </div>
-    </div>
+    </Layout>
   );
 };
 
