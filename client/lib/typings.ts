@@ -70,3 +70,10 @@ export interface HomeType {
     featuredPosts: { data: PostType[] };
   };
 }
+
+export interface AboutType {
+  attributes: {
+    heading: string;
+    content: string;
+  };
+}

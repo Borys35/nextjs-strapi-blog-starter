@@ -12,6 +12,7 @@ import remarkHtml from "remark-html";
 import sanitize from "sanitize-html";
 import Container from "../../components/atoms/container";
 import Heading from "../../components/atoms/heading";
+import RichContent from "../../components/atoms/rich-content";
 import Layout from "../../components/layout";
 import { API_URL, apolloClient } from "../../lib/apollo";
 import { PostType } from "../../lib/typings";
@@ -101,10 +102,10 @@ const Post: NextPage<Props> = ({ post }) => {
         </div>
       </div>
       <Container>
-        <div
-          className="leading-loose col-start-1 col-end-13 my-12 md:col-start-3 md:col-end-10 text-lg"
-          dangerouslySetInnerHTML={{ __html: content }}
-        ></div>
+        <RichContent
+          html={content}
+          className="col-start-1 col-end-13 my-12 md:col-start-3 md:col-end-10"
+        />
       </Container>
     </Layout>
   );
