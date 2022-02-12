@@ -93,7 +93,7 @@ const Post: NextPage<Props> = ({ post }) => {
                 </Link>
                 <span>{new Date(publishedAt).toDateString()}</span>
                 <span>
-                  {Math.ceil(content.split(" ").length / 300)} min read
+                  {Math.ceil(content.split(" ").length / 150)} min read
                 </span>
               </div>
               <Heading level={1}>{title}</Heading>
