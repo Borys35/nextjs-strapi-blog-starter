@@ -16,6 +16,8 @@ import RichContent from "../../components/atoms/rich-content";
 import Layout from "../../components/layout";
 import { API_URL, apolloClient } from "../../lib/apollo";
 import { PostType } from "../../lib/typings";
+import contentToReadTime from "../../utils/contentToReadTime";
+import timestampToString from "../../utils/timestampToString";
 
 const GET_ALL_POST_SLUGS = gql`
   {
@@ -57,6 +59,14 @@ const GET_POST = gql`
               }
             }
           }
+          author {
+            data {
+              attributes {
+                name
+                slug
+              }
+            }
+          }
         }
       }
     }
@@ -68,8 +78,10 @@ interface Props {
 }
 
 const Post: NextPage<Props> = ({ post }) => {
-  const { title, content, publishedAt, cover, category } = post.attributes;
+  const { title, content, publishedAt, cover, category, author } =
+    post.attributes;
   const { url, width, height, alternativeText } = cover.data.attributes;
+  const { name, slug } = author.data.attributes;
 
   return (
     <Layout
@@ -86,17 +98,21 @@ const Post: NextPage<Props> = ({ post }) => {
         />
         <div className="bg-gradient-to-r from-white via-white to-transparent absolute w-full h-full top-0 grid place-content-center">
           <Container>
-            <div className="py-12 col-start-1 col-end-8 md:col-start-2">
-              <div className="flex flex-wrap gap-x-8 mb-4">
+            <div className="flex flex-col gap-4 py-12 col-start-1 col-end-8 md:col-start-2">
+              <div className="flex flex-wrap gap-x-8">
                 <Link href={`/categories/${category.data.attributes.slug}`}>
                   <a>{category.data.attributes.name}</a>
                 </Link>
-                <span>{new Date(publishedAt).toDateString()}</span>
-                <span>
-                  {Math.ceil(content.split(" ").length / 150)} min read
-                </span>
+                <span>{timestampToString(publishedAt)}</span>
+                <span>{contentToReadTime(content)} min read</span>
               </div>
               <Heading level={1}>{title}</Heading>
+              <div>
+                written by{" "}
+                <Link href={`/authors/${slug}`}>
+                  <a>{name}</a>
+                </Link>
+              </div>
             </div>
           </Container>
         </div>

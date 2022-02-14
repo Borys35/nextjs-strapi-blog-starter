@@ -40,6 +40,16 @@ const GET_CATEGORY = gql`
               attributes {
                 title
                 slug
+                content
+                publishedAt
+                category {
+                  data {
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
                 cover {
                   data {
                     attributes {

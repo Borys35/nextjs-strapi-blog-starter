@@ -41,6 +41,14 @@ const GET_AUTHOR = gql`
                 content
                 slug
                 publishedAt
+                category {
+                  data {
+                    attributes {
+                      name
+                      slug
+                    }
+                  }
+                }
                 cover {
                   data {
                     attributes {

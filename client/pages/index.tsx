@@ -37,6 +37,7 @@ const GET_HOME_ATTRIBUTES = gql`
                 title
                 slug
                 publishedAt
+                content
                 cover {
                   data {
                     attributes {
@@ -74,8 +75,17 @@ const GET_HOME_ATTRIBUTES = gql`
         id
         attributes {
           title
+          content
           publishedAt
           slug
+          category {
+            data {
+              attributes {
+                name
+                slug
+              }
+            }
+          }
           author {
             data {
               attributes {
@@ -148,7 +158,7 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
   return (
     <Layout title="Home" description="Welcome to the Blog">
       <div className="flex flex-col gap-24 mb-24">
-        <header className="py-24">
+        <header className="pt-24">
           <Container>
             <Heading
               level={1}
@@ -176,35 +186,37 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
             </div>
           </Container>
         </header>
-        <section>
-          <Container>
-            <Heading level={2} className="col-start-1 col-end-13 mb-8">
-              My Pick
-            </Heading>
-            <div className="grid gap-8 lg:grid-cols-3 lg:grid-rows-6 col-start-1 col-end-13">
-              <BlogPost
-                post={featuredPosts.data[0]}
-                className="lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-4"
-              />
-              <BlogPost
-                post={featuredPosts.data[1]}
-                className="lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3"
-              />
-              <BlogPost
-                post={featuredPosts.data[2]}
-                className="lg:col-start-3 lg:col-end-4 lg:row-start-3 lg:row-end-5"
-              />
-              <BlogPost
-                post={featuredPosts.data[3]}
-                className="lg:col-start-1 lg:col-end-3 lg:row-start-4 lg:row-end-7"
-              />
-              <BlogPost
-                post={featuredPosts.data[4]}
-                className="lg:col-start-3 lg:col-end-4 lg:row-start-5 lg:row-end-7"
-              />
-            </div>
-          </Container>
-        </section>
+        {featuredPosts.data.length >= 5 && (
+          <section>
+            <Container>
+              <Heading level={2} className="col-start-1 col-end-13 mb-8">
+                My Pick
+              </Heading>
+              <div className="grid gap-8 lg:grid-cols-3 lg:grid-rows-6 col-start-1 col-end-13">
+                <BlogPost
+                  post={featuredPosts.data[0]}
+                  className="lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-4"
+                />
+                <BlogPost
+                  post={featuredPosts.data[1]}
+                  className="lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3"
+                />
+                <BlogPost
+                  post={featuredPosts.data[2]}
+                  className="lg:col-start-3 lg:col-end-4 lg:row-start-3 lg:row-end-5"
+                />
+                <BlogPost
+                  post={featuredPosts.data[3]}
+                  className="lg:col-start-1 lg:col-end-3 lg:row-start-4 lg:row-end-7"
+                />
+                <BlogPost
+                  post={featuredPosts.data[4]}
+                  className="lg:col-start-3 lg:col-end-4 lg:row-start-5 lg:row-end-7"
+                />
+              </div>
+            </Container>
+          </section>
+        )}
 
         <section>
           <Container>

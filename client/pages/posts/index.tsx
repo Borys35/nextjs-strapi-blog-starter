@@ -9,12 +9,22 @@ import { PostType } from "../../lib/typings";
 
 const GET_ALL_POSTS = gql`
   {
-    posts {
+    posts(sort: "publishedAt:desc") {
       data {
         id
         attributes {
           slug
           title
+          content
+          publishedAt
+          category {
+            data {
+              attributes {
+                name
+                slug
+              }
+            }
+          }
           cover {
             data {
               attributes {
@@ -43,7 +53,7 @@ const Posts: NextPage<Props> = ({ posts }) => {
     >
       <div className="my-24">
         <Container>
-          <Heading level={1} className="mb-4">
+          <Heading level={1} className="col-start-1 col-end-13 mb-4">
             Posts
           </Heading>
           <section className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-start-1 col-end-13">
