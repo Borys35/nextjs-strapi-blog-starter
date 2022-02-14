@@ -1,5 +1,7 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { NextPage } from "next";
-import { FormEvent } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 import Button from "../components/atoms/button";
 import Container from "../components/atoms/container";
 import Heading from "../components/atoms/heading";
@@ -7,14 +9,30 @@ import Paragraph from "../components/atoms/paragraph";
 import Field from "../components/field";
 import Layout from "../components/layout";
 
+const schema = yup.object({
+  subject: yup.string().min(3).max(100).required(),
+  email: yup.string().email().required(),
+  message: yup.string().min(3).max(500).required(),
+});
+
 const Contact: NextPage = () => {
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
 
-    const form = new FormData(e.target as HTMLFormElement);
-    const formData = Object.fromEntries(form.entries());
+  // function handleSubmit(e: FormEvent) {
+  //   e.preventDefault();
 
-    console.log("data from form", formData);
+  //   const form = new FormData(e.target as HTMLFormElement);
+  //   const formData = Object.fromEntries(form.entries());
+
+  //   console.log("data from form", formData);
+  // }
+
+  function onSubmit(data: any) {
+    console.log("data", data);
   }
 
   return (
@@ -31,15 +49,31 @@ const Contact: NextPage = () => {
             </Paragraph>
           </div>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4 xl:px-24"
           >
-            <Field label="Subject" />
             <Field
-              label="Your e-mail"
-              inputProps={{ placeholder: "example@mail.com", type: "email" }}
+              // name="subject"
+              label="Subject"
+              inputProps={{ ...register("subject") }}
+              error={errors.subject}
             />
-            <Field label="Message" inputProps={{ type: "textarea" }} />
+            <Field
+              // name="email"
+              label="Your e-mail"
+              inputProps={{
+                placeholder: "example@mail.com",
+                type: "email",
+                ...register("email"),
+              }}
+              error={errors.email}
+            />
+            <Field
+              // name="message"
+              label="Message"
+              inputProps={{ type: "textarea", ...register("message") }}
+              error={errors.message}
+            />
             <Button size="lg" variant="primary" className="mt-4 self-center">
               Send
             </Button>
