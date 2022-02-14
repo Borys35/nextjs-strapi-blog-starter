@@ -1,14 +1,13 @@
 import { ApolloError, gql } from "@apollo/client";
 import type { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Button from "../components/atoms/button";
 import Container from "../components/atoms/container";
 import Heading from "../components/atoms/heading";
 import Paragraph from "../components/atoms/paragraph";
 import BlogPost from "../components/blog-post";
 import CategoryCard from "../components/category-card";
-import Field from "../components/field";
 import Layout from "../components/layout";
+import NewsletterForm from "../components/newsletter-form";
 import { API_URL, apolloClient } from "../lib/apollo";
 import { CategoryType, HomeType, PostType } from "../lib/typings";
 
@@ -232,18 +231,7 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
               <Paragraph size="lg" className="mb-8">
                 {newsletterSubheading}
               </Paragraph>
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="flex items-end"
-              >
-                <Field
-                  label="Your e-mail"
-                  inputProps={{ placeholder: "example@mail.com" }}
-                />
-                <Button size="lg" variant="primary">
-                  Subscribe
-                </Button>
-              </form>
+              <NewsletterForm />
             </div>
           </Container>
         </section>
