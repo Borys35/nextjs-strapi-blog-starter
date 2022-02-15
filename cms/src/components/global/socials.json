@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_global_socials",
+  "info": {
+    "displayName": "Socials",
+    "icon": "chart-bar",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "socialPlatform": {
+      "type": "enumeration",
+      "enum": [
+        "facebook",
+        "twitter",
+        "medium",
+        "dev",
+        "instagram",
+        "mail"
+      ],
+      "required": true
+    }
+  }
+}

@@ -14,8 +14,8 @@ const sizes = {
 };
 
 const colors = {
-  light: "text-gray-700",
-  dark: "text-gray-800",
+  light: "text-gray-800",
+  dark: "text-gray-900",
   black: "text-black",
 };
 

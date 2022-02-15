@@ -43,6 +43,12 @@
       "type": "component",
       "repeatable": true,
       "component": "global.links"
+    },
+    "socials": {
+      "type": "component",
+      "repeatable": true,
+      "component": "global.socials",
+      "required": false
     }
   }
 }

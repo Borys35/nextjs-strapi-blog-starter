@@ -8,6 +8,8 @@ import Heading from "../components/atoms/heading";
 import Paragraph from "../components/atoms/paragraph";
 import Field from "../components/field";
 import Layout from "../components/layout";
+import Socials from "../components/socials";
+import { useGlobal } from "../providers/GlobalProvider";
 
 const schema = yup.object({
   subject: yup.string().min(3).max(100).required(),
@@ -16,6 +18,9 @@ const schema = yup.object({
 });
 
 const Contact: NextPage = () => {
+  const {
+    attributes: { socials },
+  } = useGlobal();
   const {
     register,
     handleSubmit,
@@ -47,6 +52,9 @@ const Contact: NextPage = () => {
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Alias
               architecto odit porro debitis ex obcaecati repellat!
             </Paragraph>
+          </div>
+          <div className="flex flex-wrap gap-6 justify-center mb-16 text-xl">
+            <Socials socials={socials} />
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}

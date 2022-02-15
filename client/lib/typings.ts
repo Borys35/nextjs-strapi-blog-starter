@@ -49,6 +49,20 @@ interface LinkType {
   isButton: boolean;
 }
 
+export type SocialPlatform =
+  | "facebook"
+  | "twitter"
+  | "mail"
+  | "medium"
+  | "dev"
+  | "instagram";
+
+export interface SocialType {
+  id: string;
+  socialPlatform: SocialPlatform;
+  url: string;
+}
+
 export interface GlobalType {
   attributes: {
     siteUrl: string;
@@ -57,6 +71,7 @@ export interface GlobalType {
     middleNavLinks: LinkType[];
     rightNavLinks: LinkType[];
     footerLinks: LinkType[];
+    socials: SocialType[];
   };
 }
 

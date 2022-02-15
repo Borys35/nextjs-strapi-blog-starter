@@ -8,8 +8,10 @@ import BlogPost from "../components/blog-post";
 import CategoryCard from "../components/category-card";
 import Layout from "../components/layout";
 import NewsletterForm from "../components/newsletter-form";
+import Socials from "../components/socials";
 import { API_URL, apolloClient } from "../lib/apollo";
 import { CategoryType, HomeType, PostType } from "../lib/typings";
+import { useGlobal } from "../providers/GlobalProvider";
 
 const GET_HOME_ATTRIBUTES = gql`
   {
@@ -146,6 +148,9 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
   if (error) return <div>{error.message}</div>;
 
   const {
+    attributes: { socials },
+  } = useGlobal();
+  const {
     heading,
     subheading,
     newsletterHeading,
@@ -162,16 +167,12 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
           <Container>
             <Heading
               level={1}
-              className="mb-4 col-start-1 col-end-13 md:col-start-2 md:col-end-6"
+              className="mb-6 col-start-1 col-end-13 md:col-start-2 md:col-end-6"
             >
               {heading}
             </Heading>
-            <div className="col-start-1 col-end-3 md:col-start-2 md:col-end-3">
-              tw
-              <br />
-              ig
-              <br />
-              fb
+            <div className="flex flex-col flex-wrap lg:h-16 gap-4 col-start-1 col-end-3 md:col-start-2 md:col-end-3">
+              <Socials socials={socials} />
             </div>
             <div className="col-start-3 col-end-13 md:col-start-3 md:col-end-6">
               <Paragraph>{subheading}</Paragraph>

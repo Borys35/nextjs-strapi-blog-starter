@@ -4,10 +4,11 @@ import { useGlobal } from "../providers/GlobalProvider";
 import Container from "./atoms/container";
 import Paragraph from "./atoms/paragraph";
 import Logo from "./logo";
+import Socials from "./socials";
 
 const Footer: FC = () => {
   const {
-    attributes: { footerLinks },
+    attributes: { footerLinks, socials },
   } = useGlobal();
 
   return (
@@ -16,12 +17,15 @@ const Footer: FC = () => {
         <div className="mb-3 col-start-1 col-end-13 place-self-center">
           <Logo />
         </div>
-        <div className="mb-6 flex flex-wrap gap-x-4 justify-center col-start-1 col-end-13 sm:col-start-4 sm:col-end-10">
+        <div className="mb-4 flex flex-wrap gap-x-4 justify-center col-start-1 col-end-13 sm:col-start-4 sm:col-end-10">
           {footerLinks.map(({ id, text, url, isButton }) => (
             <Link key={id} href={url}>
               <a>{text}</a>
             </Link>
           ))}
+        </div>
+        <div className="mb-6 flex gap-4 justify-center col-start-1 col-end-13">
+          <Socials socials={socials} />
         </div>
         <div className="col-start-1 col-end-13">
           <Paragraph size="sm" color="light">

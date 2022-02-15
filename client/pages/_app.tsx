@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import type { AppContext, AppProps } from "next/app";
 import App from "next/app";
+import { IconContext } from "react-icons/lib";
 import { apolloClient } from "../lib/apollo";
 import GlobalProvider from "../providers/GlobalProvider";
 import "../styles/globals.scss";
@@ -37,6 +38,11 @@ const GET_GLOBAL = gql`
             url
             isButton
           }
+          socials {
+            id
+            url
+            socialPlatform
+          }
         }
       }
     }
@@ -48,7 +54,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <GlobalProvider value={data.global.data}>
-      <Component {...pageProps} />
+      <IconContext.Provider value={{ size: "1.3em" }}>
+        <Component {...pageProps} />
+      </IconContext.Provider>
     </GlobalProvider>
   );
 }

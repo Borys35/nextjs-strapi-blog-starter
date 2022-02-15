@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { useGlobal } from "../providers/GlobalProvider";
 import Button from "./atoms/button";
 import Container from "./atoms/container";
@@ -16,7 +17,7 @@ const Nav: FC = () => {
       <Container>
         <div className="flex py-2 justify-between items-center col-start-1 col-end-13">
           <Logo />
-          <div className="hidden md:flex md:gap-4 md:items-center">
+          <div className="hidden lg:flex lg:gap-4 lg:items-center">
             {middleNavLinks.map(({ id, text, url, isButton }) =>
               isButton ? (
                 <Button key={id} href={url} variant="primary">
@@ -29,7 +30,7 @@ const Nav: FC = () => {
               )
             )}
           </div>
-          <div className="hidden md:flex md:gap-4 md:items-center">
+          <div className="hidden lg:flex lg:gap-4 lg:items-center">
             {rightNavLinks.map(({ id, text, url, isButton }) =>
               isButton ? (
                 <Button key={id} href={url} variant="primary">
@@ -42,15 +43,18 @@ const Nav: FC = () => {
               )
             )}
           </div>
-          <div className="md:hidden" onClick={() => setOpen(!open)}>
-            {!open ? "Open" : "Close"}
+          <div
+            className="lg:hidden cursor-pointer"
+            onClick={() => setOpen(!open)}
+          >
+            {!open ? <FaBars /> : <FaTimes />}
           </div>
         </div>
       </Container>
       {open && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-blue-500 py-4 z-10">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-blue-500 py-4 z-10">
           <Container>
-            <div className="flex flex-col gap-4 col-start-1 col-end-13">
+            <div className="flex flex-col gap-6 items-center col-start-1 col-end-13">
               {[...middleNavLinks, ...rightNavLinks].map(
                 ({ id, text, url, isButton }) =>
                   isButton ? (
