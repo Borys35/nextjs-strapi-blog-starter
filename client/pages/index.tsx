@@ -171,7 +171,7 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
             >
               {heading}
             </Heading>
-            <div className="flex flex-col flex-wrap lg:h-16 gap-4 col-start-1 col-end-3 md:col-start-2 md:col-end-3">
+            <div className="flex flex-col flex-wrap lg:h-24 gap-4 col-start-1 col-end-3 md:col-start-2 md:col-end-3">
               <Socials socials={socials} />
             </div>
             <div className="col-start-3 col-end-13 md:col-start-3 md:col-end-6">

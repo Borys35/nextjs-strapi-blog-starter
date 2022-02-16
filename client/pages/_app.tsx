@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { ApolloProvider, gql } from "@apollo/client";
 import type { AppContext, AppProps } from "next/app";
 import App from "next/app";
 import { IconContext } from "react-icons/lib";
@@ -53,11 +53,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { data } = pageProps;
 
   return (
-    <GlobalProvider value={data.global.data}>
-      <IconContext.Provider value={{ size: "1.3em" }}>
-        <Component {...pageProps} />
-      </IconContext.Provider>
-    </GlobalProvider>
+    <ApolloProvider client={apolloClient}>
+      <GlobalProvider value={data.global.data}>
+        <IconContext.Provider value={{ size: "1.3em" }}>
+          <Component {...pageProps} />
+        </IconContext.Provider>
+      </GlobalProvider>
+    </ApolloProvider>
   );
 }
 
