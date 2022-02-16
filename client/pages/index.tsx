@@ -1,6 +1,7 @@
 import { ApolloError, gql } from "@apollo/client";
 import type { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
+import Button from "../components/atoms/button";
 import Container from "../components/atoms/container";
 import Heading from "../components/atoms/heading";
 import Paragraph from "../components/atoms/paragraph";
@@ -225,14 +226,19 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
               Latest
             </Heading>
             <div className="grid gap-8 md:grid-cols-2 col-start-1 col-end-13">
-              {posts.map((post) => (
-                <BlogPost key={post.id} post={post} />
-              ))}
-              <div className="grid md:grid-cols-3 gap-8 md:col-start-1 md:col-end-3 row-start-3 row-end-4 py-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 col-start-1 col-end-2 md:col-end-3 row-start-3 row-end-4 py-16">
                 {categories.map((category) => (
                   <CategoryCard key={category.id} category={category} />
                 ))}
               </div>
+              {posts.map((post) => (
+                <BlogPost key={post.id} post={post} />
+              ))}
+            </div>
+            <div className="col-start-1 col-end-13 flex justify-center mt-8">
+              <Button href="/posts" variant="primary" size="xl">
+                All posts
+              </Button>
             </div>
           </Container>
         </section>

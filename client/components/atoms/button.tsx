@@ -4,7 +4,7 @@ import { FC } from "react";
 
 interface Props {
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   variant?: "primary" | "default";
   href?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -13,7 +13,8 @@ interface Props {
 const sizes = {
   sm: "text-sm",
   md: "text-md",
-  lg: "text-lg",
+  lg: "text-lg px-6",
+  xl: "text-xl px-8",
 };
 
 const variants = {
@@ -29,7 +30,7 @@ const Button: FC<Props> = ({
   onClick,
   className,
 }) => {
-  const classes = `px-4 py-2 font-bold`;
+  const classes = `inline-block px-4 py-2 font-bold`;
   const sizeClass = sizes[size];
   const variantClass = variants[variant];
   const finalClasses = classNames(classes, sizeClass, variantClass, className);

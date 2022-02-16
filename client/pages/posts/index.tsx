@@ -60,11 +60,9 @@ const Posts: NextPage<Props> = ({ posts, meta }) => {
   const [loadPosts, { data }] = useLazyQuery(GET_ALL_POSTS);
 
   function handleChange(e: any) {
-    router.push(
-      { query: { sort: e.target.value, page: router.query.page } },
-      undefined,
-      { shallow: true }
-    );
+    router.push({ query: { sort: e.target.value } }, undefined, {
+      shallow: true,
+    });
   }
 
   function handleChangePage(page: number) {
@@ -132,6 +130,9 @@ const Posts: NextPage<Props> = ({ posts, meta }) => {
     }
   }, [router.query]);
 
+  const currentPage = router.query.page
+    ? parseInt(router.query.page as string)
+    : 1;
   const rightPosts: PostType[] = data ? data.posts.data : posts;
 
   return (
@@ -150,19 +151,25 @@ const Posts: NextPage<Props> = ({ posts, meta }) => {
             </Select>
           </div>
           <section className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-start-1 col-end-13">
-            {rightPosts.map((post: PostType) => (
+            {rightPosts.map((post) => (
               <BlogPost key={post.id} post={post} />
             ))}
           </section>
-          <Button onClick={() => handlePrevPage()}>Prev</Button>
-          {Array(meta.pagination.pageCount)
-            .fill(null)
-            .map((_, i) => (
-              <Button key={i} onClick={() => handleChangePage(i + 1)}>
-                Page {i + 1}
-              </Button>
-            ))}
-          <Button onClick={() => handleNextPage()}>Next</Button>
+          <div className="flex justify-center gap-1 mt-8 col-start-1 col-end-13">
+            <Button onClick={() => handlePrevPage()}>Prev</Button>
+            {Array(meta.pagination.pageCount)
+              .fill(null)
+              .map((_, i) => (
+                <Button
+                  key={i}
+                  onClick={() => handleChangePage(i + 1)}
+                  variant={currentPage === i + 1 ? "primary" : "default"}
+                >
+                  {i + 1}
+                </Button>
+              ))}
+            <Button onClick={() => handleNextPage()}>Next</Button>
+          </div>
         </Container>
       </div>
     </Layout>
