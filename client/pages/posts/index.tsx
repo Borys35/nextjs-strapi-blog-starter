@@ -2,17 +2,18 @@ import { gql, useLazyQuery } from "@apollo/client";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import Button from "../../components/atoms/button";
 import Container from "../../components/atoms/container";
 import Heading from "../../components/atoms/heading";
 import Select from "../../components/atoms/select";
 import BlogPost from "../../components/blog-post";
 import Layout from "../../components/layout";
 import { apolloClient } from "../../lib/apollo";
-import { PostType } from "../../lib/typings";
+import { MetaType, PostType } from "../../lib/typings";
 
 const GET_ALL_POSTS = gql`
-  query GetPosts($sort: [String]) {
-    posts(sort: $sort) {
+  query GetPosts($sort: [String], $page: Int) {
+    posts(sort: $sort, pagination: { page: $page, pageSize: 6 }) {
       data {
         id
         attributes {
@@ -40,32 +41,95 @@ const GET_ALL_POSTS = gql`
           }
         }
       }
+      meta {
+        pagination {
+          pageCount
+        }
+      }
     }
   }
 `;
 
 interface Props {
   posts: PostType[];
+  meta: MetaType;
 }
 
-const Posts: NextPage<Props> = ({ posts }) => {
+const Posts: NextPage<Props> = ({ posts, meta }) => {
   const router = useRouter();
   const [loadPosts, { data }] = useLazyQuery(GET_ALL_POSTS);
 
   function handleChange(e: any) {
-    router.push({ query: { sort: e.target.value } });
+    router.push(
+      { query: { sort: e.target.value, page: router.query.page } },
+      undefined,
+      { shallow: true }
+    );
+  }
+
+  function handleChangePage(page: number) {
+    router.push({ query: { sort: router.query.sort, page } }, undefined, {
+      shallow: true,
+    });
+  }
+
+  function handleNextPage() {
+    const { page } = router.query;
+    if (!page)
+      return router.push(
+        { query: { sort: router.query.sort, page: 2 } },
+        undefined,
+        { shallow: true }
+      );
+
+    const pageNum = parseInt(page as string) + 1;
+    if (pageNum > meta.pagination.pageCount) return;
+
+    router.push(
+      { query: { sort: router.query.sort, page: pageNum } },
+      undefined,
+      { shallow: true }
+    );
+  }
+
+  function handlePrevPage() {
+    const { page } = router.query;
+    if (!page) return;
+
+    const pageNum = parseInt(page as string) - 1;
+    if (pageNum <= 0) return;
+
+    router.push(
+      { query: { sort: router.query.sort, page: pageNum } },
+      undefined,
+      { shallow: true }
+    );
   }
 
   useEffect(() => {
-    const { sort } = router.query;
+    const { sort, page } = router.query;
 
-    let sortOpt;
-    if (sort === "latest") sortOpt = "publishedAt:desc";
-    else if (sort === "oldest") sortOpt = "publishedAt:asc";
-    else if (sort === "alphabetically") sortOpt = "title:asc";
-    else sortOpt = "publishedAt:desc";
+    let pageNum = parseInt(page as string);
 
-    loadPosts({ variables: { sort: sortOpt } });
+    if (pageNum < 1 || pageNum > meta.pagination.pageCount) {
+      if (pageNum < 1) pageNum = 1;
+      else if (pageNum > meta.pagination.pageCount)
+        pageNum = meta.pagination.pageCount;
+
+      router.push(
+        { query: { sort: router.query.sort, page: pageNum } },
+        undefined,
+        { shallow: true }
+      );
+    } else {
+      let sortOpt;
+      if (sort === "latest") sortOpt = "publishedAt:desc";
+      else if (sort === "oldest") sortOpt = "publishedAt:asc";
+      else if (sort === "alphabetically") sortOpt = "title:asc";
+      else sortOpt = "publishedAt:desc";
+
+      loadPosts({ variables: { sort: sortOpt, page: pageNum } });
+    }
   }, [router.query]);
 
   const rightPosts: PostType[] = data ? data.posts.data : posts;
@@ -90,6 +154,15 @@ const Posts: NextPage<Props> = ({ posts }) => {
               <BlogPost key={post.id} post={post} />
             ))}
           </section>
+          <Button onClick={() => handlePrevPage()}>Prev</Button>
+          {Array(meta.pagination.pageCount)
+            .fill(null)
+            .map((_, i) => (
+              <Button key={i} onClick={() => handleChangePage(i + 1)}>
+                Page {i + 1}
+              </Button>
+            ))}
+          <Button onClick={() => handleNextPage()}>Next</Button>
         </Container>
       </div>
     </Layout>
@@ -105,7 +178,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const posts: PostType[] = data.posts.data;
 
   return {
-    props: { posts },
+    props: { posts, meta: data.posts.meta },
     revalidate: 60,
   };
 };

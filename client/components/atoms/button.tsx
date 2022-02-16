@@ -7,6 +7,7 @@ interface Props {
   size?: "sm" | "md" | "lg";
   variant?: "primary" | "default";
   href?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const sizes = {
@@ -25,6 +26,7 @@ const Button: FC<Props> = ({
   size = "md",
   variant = "default",
   href,
+  onClick,
   className,
 }) => {
   const classes = `px-4 py-2 font-bold`;
@@ -47,7 +49,11 @@ const Button: FC<Props> = ({
     );
   }
 
-  return <button className={finalClasses}>{children}</button>;
+  return (
+    <button className={finalClasses} onClick={onClick}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;

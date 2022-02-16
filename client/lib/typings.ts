@@ -92,3 +92,9 @@ export interface AboutType {
     content: string;
   };
 }
+
+export interface MetaType {
+  pagination: {
+    pageCount: number;
+  };
+}
