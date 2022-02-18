@@ -12,9 +12,9 @@ interface Props {
 
 const sizes = {
   sm: "text-sm",
-  md: "text-md",
-  lg: "text-lg px-6",
-  xl: "text-xl px-8",
+  md: "text-md px-6",
+  lg: "text-lg px-8",
+  xl: "text-lg px-10 py-3",
 };
 
 const variants = {

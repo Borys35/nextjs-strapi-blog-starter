@@ -9,10 +9,12 @@ import Image from "next/image";
 import Container from "../../components/atoms/container";
 import Heading from "../../components/atoms/heading";
 import Paragraph from "../../components/atoms/paragraph";
-import BlogPost from "../../components/blog-post";
 import Layout from "../../components/layout";
+import PostsGrid from "../../components/pagination/pages-grid";
+import PostsPages from "../../components/pagination/posts-pages";
+import PostsSelect from "../../components/pagination/posts-select";
 import { API_URL, apolloClient } from "../../lib/apollo";
-import { AuthorType } from "../../lib/typings";
+import { AuthorType, MetaType, PostType } from "../../lib/typings";
 
 const GET_ALL_AUTHOR_SLUGS = gql`
   {
@@ -75,17 +77,68 @@ const GET_AUTHOR = gql`
     }
   }
 `;
+const GET_ALL_POSTS = gql`
+  query GetPosts($sort: [String], $page: Int, $slug: String!) {
+    posts(
+      sort: $sort
+      pagination: { page: $page, pageSize: 6 }
+      filters: { author: { slug: { eq: $slug } } }
+    ) {
+      data {
+        id
+        attributes {
+          slug
+          title
+          content
+          publishedAt
+          author {
+            data {
+              attributes {
+                slug
+              }
+            }
+          }
+          category {
+            data {
+              attributes {
+                name
+                slug
+              }
+            }
+          }
+          cover {
+            data {
+              attributes {
+                url
+                width
+                height
+                alternativeText
+              }
+            }
+          }
+        }
+      }
+      meta {
+        pagination {
+          pageCount
+        }
+      }
+    }
+  }
+`;
 
 interface Props {
   author: AuthorType;
+  posts: PostType[];
+  meta: MetaType;
 }
 
-const author: NextPage<Props> = ({ author }) => {
+const author: NextPage<Props> = ({ author, posts, meta }) => {
   const {
-    attributes: { name, description, slug, avatar, posts },
+    attributes: { name, description, slug, avatar },
   } = author;
   const { url, width, height, alternativeText } = avatar.data.attributes;
-  console.log(description, "desc");
+  const { pageCount } = meta.pagination;
 
   return (
     <Layout title={name} description={description}>
@@ -116,13 +169,19 @@ const author: NextPage<Props> = ({ author }) => {
 
         <section>
           <Container>
-            <Heading level={2} className="mb-4 col-start-1 col-end-13">
-              {posts.data.length} post{posts.data.length !== 1 && "s"}
-            </Heading>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 col-start-1 col-end-13">
-              {posts.data.map((post) => (
-                <BlogPost key={post.id} post={post} />
-              ))}
+            <div className="flex flex-col gap-8 col-start-1 col-end-13">
+              <div className="flex items-end justify-between">
+                <Heading level={2}>
+                  {posts.length} post{posts.length !== 1 && "s"}
+                </Heading>
+                <PostsSelect />
+              </div>
+              <PostsGrid
+                staticPosts={posts}
+                getPostsQuery={GET_ALL_POSTS}
+                pageCount={pageCount}
+              />
+              {pageCount >= 1 && <PostsPages pageCount={pageCount} />}
             </div>
           </Container>
         </section>
@@ -155,9 +214,16 @@ export const getStaticProps: GetStaticProps = async (
   });
   const [author] = data.authors.data as AuthorType[];
 
+  const { data: postsData } = await apolloClient.query({
+    query: GET_ALL_POSTS,
+    variables: { slug },
+  });
+
   return {
     props: {
       author,
+      posts: postsData.posts.data,
+      meta: postsData.posts.meta,
     },
     revalidate: 60,
   };

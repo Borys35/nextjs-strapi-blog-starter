@@ -10,10 +10,12 @@ import { remark } from "remark";
 import html from "remark-html";
 import sanitize from "sanitize-html";
 import Container from "../../components/atoms/container";
-import BlogPost from "../../components/blog-post";
 import Layout from "../../components/layout";
+import PostsGrid from "../../components/pagination/pages-grid";
+import PostsPages from "../../components/pagination/posts-pages";
+import PostsSelect from "../../components/pagination/posts-select";
 import { API_URL, apolloClient } from "../../lib/apollo";
-import { CategoryType } from "../../lib/typings";
+import { CategoryType, MetaType, PostType } from "../../lib/typings";
 
 const GET_ALL_CATEGORY_SLUGS = gql`
   {
@@ -78,16 +80,61 @@ const GET_CATEGORY = gql`
     }
   }
 `;
+const GET_ALL_POSTS = gql`
+  query GetPosts($sort: [String], $page: Int, $slug: String!) {
+    posts(
+      sort: $sort
+      pagination: { page: $page, pageSize: 6 }
+      filters: { category: { slug: { eq: $slug } } }
+    ) {
+      data {
+        id
+        attributes {
+          slug
+          title
+          content
+          publishedAt
+          category {
+            data {
+              attributes {
+                name
+                slug
+              }
+            }
+          }
+          cover {
+            data {
+              attributes {
+                url
+                width
+                height
+                alternativeText
+              }
+            }
+          }
+        }
+      }
+      meta {
+        pagination {
+          pageCount
+        }
+      }
+    }
+  }
+`;
 
 interface Props {
   category: CategoryType;
+  posts: PostType[];
+  meta: MetaType;
 }
 
-const Category: NextPage<Props> = ({ category }) => {
+const Category: NextPage<Props> = ({ category, posts, meta }) => {
   const {
-    attributes: { name, description, posts, cover },
+    attributes: { name, description, cover },
   } = category;
   const { url, width, height, alternativeText } = cover.data.attributes;
+  const { pageCount } = meta.pagination;
 
   return (
     <Layout title={name} description={description}>
@@ -107,10 +154,14 @@ const Category: NextPage<Props> = ({ category }) => {
               <h1>{name}</h1>
               <div dangerouslySetInnerHTML={{ __html: description }}></div>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {posts.data.map((post) => (
-                <BlogPost key={post.id} post={post} />
-              ))}
+            <div className="flex flex-col gap-8 col-start-1 col-end-13">
+              <PostsSelect className="self-end" />
+              <PostsGrid
+                staticPosts={posts}
+                getPostsQuery={GET_ALL_POSTS}
+                pageCount={pageCount}
+              />
+              {pageCount > 1 && <PostsPages pageCount={pageCount} />}
             </div>
           </div>
         </Container>
@@ -136,6 +187,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (
   ctx: GetStaticPropsContext
 ) => {
+  // Fetching category without posts
+
   const { slug } = ctx.params as { slug: string };
   const { data } = await apolloClient.query({
     query: GET_CATEGORY,
@@ -151,9 +204,20 @@ export const getStaticProps: GetStaticProps = async (
     description: sanitize(processed.toString()),
   };
 
+  // Fetching posts separately for pagination
+
+  const { data: postsData } = await apolloClient.query({
+    query: GET_ALL_POSTS,
+    variables: { slug },
+  });
+
+  // Returning data
+
   return {
     props: {
       category: newCategory,
+      posts: postsData.posts.data,
+      meta: postsData.posts.meta,
     },
     revalidate: 60,
   };
