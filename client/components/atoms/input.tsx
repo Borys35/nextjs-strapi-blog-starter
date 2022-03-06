@@ -11,12 +11,19 @@ const Input: FC<InputProps> = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (type === "textarea")
       return (
-        <textarea ref={ref as any} name={name} className={classes} {...props as any}></textarea>
+        <textarea
+          ref={ref as any}
+          name={name}
+          className={classes}
+          {...(props as any)}
+        ></textarea>
       );
     return (
       <input ref={ref} name={name} type={type} className={classes} {...props} />
     );
   }
 );
+
+Input.displayName = "Input";
 
 export default Input;

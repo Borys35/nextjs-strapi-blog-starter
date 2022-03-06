@@ -146,8 +146,6 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
-  if (error) return <div>{error.message}</div>;
-
   const {
     attributes: { socials },
   } = useGlobal();
@@ -160,6 +158,8 @@ const Home: NextPage<Props> = ({ home, posts, categories, error }) => {
     featuredPosts,
   } = home.attributes;
   const { url, width, height, alternativeText } = mainImage.data.attributes;
+
+  if (error) return <div>{error.message}</div>;
 
   return (
     <Layout title="Home" description="Welcome to the Blog">

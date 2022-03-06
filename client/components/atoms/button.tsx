@@ -44,7 +44,7 @@ const Button: FC<Props> = ({
       );
 
     return (
-      <a href={href} target="_blank" className={finalClasses}>
+      <a href={href} target="_blank" rel="noreferrer" className={finalClasses}>
         {children}
       </a>
     );
